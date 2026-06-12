@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copiar a android/app/src/main/res/xml/network_security_config.xml
+     y referenciar en AndroidManifest.xml:
+     <application android:networkSecurityConfig="@xml/network_security_config" ...> -->
+<network-security-config>
+    <!-- Prohíbe todo tráfico sin cifrar (HTTP plano) en toda la app -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    <!-- Solo se permite hablar con estos dominios -->
+    <domain-config>
+        <domain includeSubdomains="false">raw.githubusercontent.com</domain>
+        <domain includeSubdomains="false">api.football-data.org</domain>
+        <domain includeSubdomains="false">v3.football.api-sports.io</domain>
+        <domain includeSubdomains="false">fonts.googleapis.com</domain>
+        <domain includeSubdomains="false">fonts.gstatic.com</domain>
+    </domain-config>
+</network-security-config>

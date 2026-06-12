@@ -1,0 +1,21 @@
+{
+  "appId": "ar.mundial2026.fixture",
+  "appName": "Mundial 2026",
+  "webDir": "www",
+  "backgroundColor": "#0a1430",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": false
+  },
+  "plugins": {
+    "CapacitorHttp": { "enabled": true }
+  },
+  "android": {
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "limitsNavigationsToAppBoundDomains": true
+  }
+}

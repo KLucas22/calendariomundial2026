@@ -1,0 +1,12 @@
+Info.plist — App Transport Security (iOS ya bloquea HTTP por defecto; NO agregar excepciones):
+
+  NO incluir NSAllowsArbitraryLoads.
+  Dominios permitidos por la app (vía WKAppBoundDomains, refuerza
+  "limitsNavigationsToAppBoundDomains" del capacitor.config):
+
+  <key>WKAppBoundDomains</key>
+  <array>
+      <string>raw.githubusercontent.com</string>
+      <string>api.football-data.org</string>
+      <string>v3.football.api-sports.io</string>
+  </array>

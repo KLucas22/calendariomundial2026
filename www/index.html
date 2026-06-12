@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://raw.githubusercontent.com https://api.football-data.org https://v3.football.api-sports.io; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Mundial 2026 · Fixture AR</title>
+<meta name="theme-color" content="#0a1430">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mundial 26">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a1430; --bg2:#0e1c42; --card:#111f47; --line:rgba(255,255,255,.08);
+  --celeste:#75AADB; --txt:#eef3fb; --dim:#8fa3c7; --gold:#FFD966; --live:#ff5a5a;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);
+  font-family:'Barlow',system-ui,-apple-system,sans-serif;}
+body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+header{
+  position:sticky;top:0;z-index:20;
+  background:linear-gradient(180deg,#0a1430 70%,rgba(10,20,48,.92));
+  backdrop-filter:blur(8px);
+  padding:calc(10px + env(safe-area-inset-top)) 16px 10px;
+  border-bottom:1px solid var(--line);
+}
+.franjas{height:4px;border-radius:2px;margin-bottom:10px;
+  background:repeating-linear-gradient(90deg,var(--celeste) 0 22%,#fff 22% 39%,var(--celeste) 39% 61%,#fff 61% 78%,var(--celeste) 78% 100%);}
+h1{font-family:'Barlow Condensed';font-weight:800;font-size:26px;letter-spacing:.5px;margin:0;text-transform:uppercase;line-height:1}
+h1 small{display:block;font-size:12px;font-weight:600;color:var(--dim);letter-spacing:2.5px;margin-top:3px}
+.next{margin:10px 0 0;background:linear-gradient(135deg,#16275c,#0e1c42);
+  border:1px solid rgba(117,170,219,.35);border-radius:14px;padding:9px 14px;
+  display:flex;align-items:center;gap:12px}
+.next.fav{border-color:rgba(255,217,102,.4)}
+.next .cd{font-family:'Barlow Condensed';font-weight:800;font-size:26px;letter-spacing:1px;color:var(--celeste);font-variant-numeric:tabular-nums;margin-left:auto;text-align:right}
+.next.fav .cd{color:var(--gold)}
+.next .lbl{font-size:10.5px;color:var(--dim);text-transform:uppercase;letter-spacing:1.5px}
+.next .who{font-family:'Barlow Condensed';font-weight:700;font-size:17px;line-height:1.1}
+.controls{padding:10px 16px 4px}
+input[type=search],input[type=password],input[type=text]{width:100%;padding:11px 14px;border-radius:12px;border:1px solid var(--line);
+  background:var(--bg2);color:var(--txt);font-size:16px;font-family:inherit;outline:none}
+input::placeholder{color:var(--dim)}
+input:focus{border-color:var(--celeste)}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:10px 16px 6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;padding:7px 13px;border-radius:999px;border:1.5px solid var(--line);
+  background:var(--bg2);color:var(--txt);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--celeste);border-color:var(--celeste);color:#06122e}
+.chip.fav.on{background:var(--gold);border-color:var(--gold)}
+.tchip{display:flex;align-items:center;gap:7px}
+.tchip .dot{width:11px;height:11px;border-radius:50%;flex:none}
+.legend-note{padding:0 16px 4px;font-size:11.5px;color:var(--dim)}
+main{padding:4px 16px 24px;max-width:680px;margin:0 auto}
+.day{position:sticky;top:0;margin:18px -4px 8px;z-index:5}
+.day h2{display:inline-flex;align-items:baseline;gap:8px;margin:0;
+  font-family:'Barlow Condensed';font-weight:700;font-size:18px;text-transform:uppercase;letter-spacing:1.5px;
+  background:var(--bg);padding:4px 10px;border-radius:8px;border:1px solid var(--line)}
+.day h2 em{font-style:normal;color:var(--dim);font-size:13px;letter-spacing:.5px;font-family:'Barlow'}
+.day.today h2{border-color:var(--gold);color:var(--gold)}
+.match{display:grid;grid-template-columns:6px 64px 1fr auto;gap:0 12px;align-items:center;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:9px;
+  padding:11px 12px 11px 0;overflow:hidden;position:relative}
+.match.past{opacity:.55}
+.match.arg{border-color:rgba(255,217,102,.55);box-shadow:0 0 0 1px rgba(255,217,102,.18) inset}
+.match.isfav{border-color:rgba(255,217,102,.55)}
+.bar{align-self:stretch;border-radius:14px 0 0 14px;grid-row:1/span 2;grid-column:1}
+.hora{grid-row:1/span 2;grid-column:2;font-family:'Barlow Condensed';font-weight:800;font-size:24px;
+  text-align:center;font-variant-numeric:tabular-nums;line-height:1}
+.hora small{display:block;font-size:10px;font-weight:600;color:var(--dim);letter-spacing:1.5px;margin-top:2px}
+.hora .score{font-size:26px;color:var(--txt)}
+.hora .st{display:block;font-size:9.5px;font-weight:700;letter-spacing:1px;margin-top:3px;border-radius:5px;padding:1px 4px}
+.hora .st.live{color:#fff;background:var(--live);animation:pulse 1.4s infinite}
+.hora .st.ft{color:var(--dim);border:1px solid var(--line)}
+@keyframes pulse{50%{opacity:.55}}
+.match>.info{grid-column:3;grid-row:1}
+.teams{font-family:'Barlow Condensed';font-weight:700;font-size:18.5px;line-height:1.15}
+.teams .vs{color:var(--dim);font-weight:500;font-size:14px;padding:0 3px}
+.meta{font-size:12px;color:var(--dim);margin-top:3px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.gpill{font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  border:1px solid var(--line);border-radius:6px;padding:1.5px 6px;color:var(--celeste)}
+.tv{display:inline-flex;align-items:center;gap:5px}
+.tv .dot{width:8px;height:8px;border-radius:50%}
+.extra{grid-column:3;grid-row:2;font-size:11.5px;color:var(--dim);margin-top:4px;line-height:1.45}
+.extra .mvp{color:var(--gold);font-weight:600}
+.acts{grid-row:1/span 2;grid-column:4;display:flex;flex-direction:column;gap:6px}
+.acts button{border:1px solid var(--line);background:var(--bg2);color:var(--celeste);
+  border-radius:10px;width:38px;height:34px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.acts .star.on{color:var(--gold);border-color:rgba(255,217,102,.6);background:rgba(255,217,102,.12)}
+.empty{text-align:center;color:var(--dim);padding:48px 16px;font-size:15px}
+/* Grupos */
+.standings{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:6px 0 16px}
+.standings table{width:100%;border-collapse:collapse;font-size:13px}
+.standings th{font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  font-size:11px;color:var(--dim);padding:9px 6px;border-bottom:1px solid var(--line);text-align:center}
+.standings th:nth-child(2){text-align:left}
+.standings td{padding:9px 6px;text-align:center;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.standings tr:last-child td{border-bottom:none}
+.standings td.team{text-align:left;font-weight:600;white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+.standings td.pts{font-weight:700;color:var(--celeste)}
+.standings tr.q td:first-child{box-shadow:inset 3px 0 0 #34A853}
+.standings .pos{color:var(--dim)}
+.section-h{font-family:'Barlow Condensed';font-weight:700;font-size:17px;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin:14px 0 8px}
+.sync{font-size:11px;color:var(--dim);padding:2px 16px 0;display:flex;gap:6px;align-items:center}
+.sync .dot{width:7px;height:7px;border-radius:50%;background:#34A853}
+.sync.err .dot{background:var(--live)}
+/* Tabs */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;
+  background:rgba(10,18,40,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;background:none;border:none;color:var(--dim);font-family:'Barlow Condensed';
+  font-weight:700;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;padding:9px 0 8px;cursor:pointer}
+nav button .ic{display:block;font-size:19px;margin-bottom:1px}
+nav button.on{color:var(--celeste)}
+.view{display:none}.view.on{display:block}
+/* Ajustes */
+.set-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.set-card h3{font-family:'Barlow Condensed';margin:0 0 4px;font-size:18px;text-transform:uppercase;letter-spacing:1px}
+.set-card p{font-size:12.5px;color:var(--dim);margin:4px 0 10px;line-height:1.55}
+.set-card label{font-size:12px;font-weight:600;color:var(--dim);display:block;margin:10px 0 5px}
+.btnrow{display:flex;gap:8px;margin-top:12px}
+.btn{flex:1;padding:11px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);
+  color:var(--txt);font-weight:600;font-size:14px;cursor:pointer;font-family:inherit}
+.btn.primary{background:var(--celeste);color:#06122e;border-color:var(--celeste)}
+dialog{border:none;border-radius:16px;background:var(--card);color:var(--txt);max-width:320px;
+  padding:18px;font-family:inherit;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+dialog::backdrop{background:rgba(4,8,20,.7)}
+dialog h3{font-family:'Barlow Condensed';margin:0 0 4px;font-size:20px}
+dialog p{font-size:13px;color:var(--dim);margin:0 0 14px}
+dialog a,dialog button{display:block;width:100%;text-align:center;padding:11px;border-radius:10px;margin-bottom:8px;
+  font-weight:600;font-size:14px;text-decoration:none;border:1px solid var(--line);background:var(--bg2);color:var(--txt);cursor:pointer;font-family:inherit}
+dialog a.primary{background:var(--celeste);color:#06122e;border-color:var(--celeste)}
+@media (prefers-reduced-motion:no-preference){
+  .match{animation:in .25s ease both}
+  @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+}
+@media (prefers-reduced-motion:reduce){ .hora .st.live{animation:none} }
+</style>
+</head>
+<body>
+<header>
+  <div class="franjas"></div>
+  <h1>Mundial 2026 <small>Fase de grupos · Hora argentina (UTC−3)</small></h1>
+  <div id="nextCards"></div>
+</header>
+<div class="sync" id="sync"><span class="dot"></span><span id="syncTxt">Sin sincronizar todavía</span></div>
+
+<!-- FIXTURE -->
+<section class="view on" id="view-fixture">
+  <div class="controls">
+    <input type="search" id="q" placeholder="Buscá tu equipo (ej: Argentina, Brasil…)" autocomplete="off">
+  </div>
+  <div class="chips" id="groupChips"></div>
+  <div class="chips" id="tvChips"></div>
+  <div class="legend-note">Los colores identifican las plataformas que transmiten cada partido. Tocá la ★ de un partido para seguirlo como favorito.</div>
+  <main>
+    <div id="list"></div>
+    <div class="empty" id="empty" hidden>No hay partidos que coincidan con el filtro.</div>
+  </main>
+</section>
+
+<!-- GRUPOS -->
+<section class="view" id="view-groups">
+  <div class="chips" id="grpSel"></div>
+  <main>
+    <div class="section-h">Tabla de posiciones</div>
+    <div class="standings" id="standings"></div>
+    <div class="section-h">Partidos del grupo</div>
+    <div id="grpMatches"></div>
+    <div class="legend-note" style="padding:0">Verde: clasifica directo (1° y 2°; los 8 mejores 3° también avanzan). La tabla se calcula con los resultados finales; criterios: puntos, diferencia de gol, goles a favor.</div>
+  </main>
+</section>
+
+<!-- AJUSTES -->
+<section class="view" id="view-settings">
+  <main>
+    <div class="set-card">
+      <h3>Resultados en vivo</h3>
+      <p>La app ya funciona sin configurar nada: usa una fuente pública y gratuita (openfootball) que carga resultados finales y goleadores. Para ver los partidos <b>en vivo</b> y que el final se refleje al instante, agregá una clave gratuita de <b>football-data.org</b> (incluye el Mundial en su plan gratis).</p>
+      <label for="fdKey">Clave de football-data.org (opcional)</label>
+      <input type="password" id="fdKey" placeholder="X-Auth-Token" autocomplete="off">
+      <label for="afKey">Clave de API-Football (opcional, habilita el MVP)</label>
+      <input type="password" id="afKey" placeholder="x-apisports-key" autocomplete="off">
+      <p>El MVP se muestra ~10 minutos después del final: es el jugador mejor valorado del partido según API-Football. La FIFA no publica el premio oficial en ninguna API pública.</p>
+      <div class="btnrow">
+        <button class="btn" id="btnTest">Probar conexión</button>
+        <button class="btn primary" id="btnSave">Guardar</button>
+      </div>
+      <p id="testOut"></p>
+    </div>
+    <div class="set-card">
+      <h3>Actualización</h3>
+      <p id="updInfo">—</p>
+      <div class="btnrow"><button class="btn primary" id="btnRefresh">Actualizar ahora</button></div>
+    </div>
+    <div class="set-card">
+      <h3>Privacidad y seguridad</h3>
+      <p>Esta app no tiene cuentas, no pide permisos, no usa rastreadores ni publicidad y no envía ningún dato tuyo a ningún servidor. Tus favoritos y tus claves se guardan únicamente en este dispositivo. Las únicas conexiones salientes son a las fuentes de resultados, siempre por HTTPS.</p>
+    </div>
+    <div class="set-card">
+      <h3>Siri (iPhone)</h3>
+      <p>Agregá los partidos a tu calendario con el botón <b>+</b> y Siri va a poder responderte “¿qué tengo hoy?” o leerte el próximo evento. También podés crear un Atajo de Siri que abra esta app.</p>
+    </div>
+  </main>
+</section>
+
+<nav>
+  <button class="on" data-v="fixture"><span class="ic">⚽</span>Fixture</button>
+  <button data-v="groups"><span class="ic">🏆</span>Grupos</button>
+  <button data-v="settings"><span class="ic">⚙️</span>Ajustes</button>
+</nav>
+
+<dialog id="dlg">
+  <h3 id="dlgTitle"></h3>
+  <p id="dlgSub"></p>
+  <a id="dlgIcs" class="primary" download>Descargar .ics (Apple / Outlook)</a>
+  <a id="dlgGcal" target="_blank" rel="noopener noreferrer">Abrir en Google Calendar</a>
+  <button id="dlgClose">Cerrar</button>
+</dialog>
+
+<script>
+"use strict";
+/* ====== DATOS BASE (del Excel original) ====== */
+const MATCHES = [{"grupo": "Grupo A", "local": "México", "visitante": "Sudáfrica", "fecha": "2026-06-11", "hora": "16:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe", "color": "34A853"}, {"grupo": "Grupo A", "local": "Rep. de Corea", "visitante": "Chequia", "fecha": "2026-06-11", "hora": "23:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo B", "local": "Canadá", "visitante": "Bosnia y Herzegovina", "fecha": "2026-06-12", "hora": "16:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo D", "local": "Estados Unidos", "visitante": "Paraguay", "fecha": "2026-06-12", "hora": "22:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports", "color": "B4A7D6"}, {"grupo": "Grupo B", "local": "Qatar", "visitante": "Suiza", "fecha": "2026-06-13", "hora": "16:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo C", "local": "Brasil", "visitante": "Marruecos", "fecha": "2026-06-13", "hora": "19:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe", "color": "34A853"}, {"grupo": "Grupo C", "local": "Haití", "visitante": "Escocia", "fecha": "2026-06-13", "hora": "22:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo D", "local": "Australia", "visitante": "Turquía", "fecha": "2026-06-14", "hora": "01:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo E", "local": "Alemania", "visitante": "Curazao", "fecha": "2026-06-14", "hora": "14:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo F", "local": "Países Bajos", "visitante": "Japón", "fecha": "2026-06-14", "hora": "17:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports", "color": "B4A7D6"}, {"grupo": "Grupo E", "local": "Costa de Marfil", "visitante": "Ecuador", "fecha": "2026-06-14", "hora": "20:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe", "color": "34A853"}, {"grupo": "Grupo F", "local": "Suecia", "visitante": "Túnez", "fecha": "2026-06-14", "hora": "23:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo H", "local": "España", "visitante": "Cabo Verde", "fecha": "2026-06-15", "hora": "13:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo G", "local": "Bélgica", "visitante": "Egipto", "fecha": "2026-06-15", "hora": "16:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo H", "local": "Arabia Saudita", "visitante": "Uruguay", "fecha": "2026-06-15", "hora": "19:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports", "color": "B4A7D6"}, {"grupo": "Grupo G", "local": "Irán", "visitante": "Nueva Zelanda", "fecha": "2026-06-15", "hora": "22:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo I", "local": "Francia", "visitante": "Senegal", "fecha": "2026-06-16", "hora": "16:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo I", "local": "Irak", "visitante": "Noruega", "fecha": "2026-06-16", "hora": "19:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo J", "local": "Argentina", "visitante": "Argelia", "fecha": "2026-06-16", "hora": "22:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports/TV Pública", "color": "FFD966"}, {"grupo": "Grupo J", "local": "Austria", "visitante": "Jordania", "fecha": "2026-06-17", "hora": "01:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo K", "local": "Portugal", "visitante": "Rep. Democ. del Congo", "fecha": "2026-06-17", "hora": "14:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo L", "local": "Inglaterra", "visitante": "Croacia", "fecha": "2026-06-17", "hora": "17:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports", "color": "B4A7D6"}, {"grupo": "Grupo L", "local": "Ghana", "visitante": "Panamá", "fecha": "2026-06-17", "hora": "20:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo K", "local": "Uzbekistán", "visitante": "Colombia", "fecha": "2026-06-17", "hora": "23:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo A", "local": "Chequia", "visitante": "Sudáfrica", "fecha": "2026-06-18", "hora": "13:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo B", "local": "Suiza", "visitante": "Bosnia y Herzegovina", "fecha": "2026-06-18", "hora": "16:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe", "color": "34A853"}, {"grupo": "Grupo B", "local": "Canadá", "visitante": "Qatar", "fecha": "2026-06-18", "hora": "19:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo A", "local": "México", "visitante": "Rep. de Corea", "fecha": "2026-06-18", "hora": "22:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo D", "local": "Estados Unidos", "visitante": "Australia", "fecha": "2026-06-19", "hora": "16:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo C", "local": "Escocia", "visitante": "Marruecos", "fecha": "2026-06-19", "hora": "19:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe", "color": "34A853"}, {"grupo": "Grupo C", "local": "Brasil", "visitante": "Haití", "fecha": "2026-06-19", "hora": "22:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo D", "local": "Turquía", "visitante": "Paraguay", "fecha": "2026-06-20", "hora": "01:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo F", "local": "Países Bajos", "visitante": "Suecia", "fecha": "2026-06-20", "hora": "14:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo E", "local": "Alemania", "visitante": "Costa de Marfil", "fecha": "2026-06-20", "hora": "17:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports", "color": "B4A7D6"}, {"grupo": "Grupo E", "local": "Ecuador", "visitante": "Curazao", "fecha": "2026-06-20", "hora": "21:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo H", "local": "España", "visitante": "Arabia Saudita", "fecha": "2026-06-21", "hora": "13:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports", "color": "B4A7D6"}, {"grupo": "Grupo G", "local": "Bélgica", "visitante": "Irán", "fecha": "2026-06-21", "hora": "16:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo H", "local": "Uruguay", "visitante": "Cabo Verde", "fecha": "2026-06-21", "hora": "19:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe", "color": "34A853"}, {"grupo": "Grupo F", "local": "Túnez", "visitante": "Japón", "fecha": "2026-06-21", "hora": "22:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo G", "local": "Nueva Zelanda", "visitante": "Egipto", "fecha": "2026-06-21", "hora": "22:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo J", "local": "Argentina", "visitante": "Austria", "fecha": "2026-06-22", "hora": "14:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports/TV Pública", "color": "FFD966"}, {"grupo": "Grupo I", "local": "Francia", "visitante": "Irak", "fecha": "2026-06-22", "hora": "18:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo I", "local": "Noruega", "visitante": "Senegal", "fecha": "2026-06-22", "hora": "21:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo J", "local": "Jordania", "visitante": "Argelia", "fecha": "2026-06-23", "hora": "00:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo K", "local": "Portugal", "visitante": "Uzbekistán", "fecha": "2026-06-23", "hora": "14:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports", "color": "B4A7D6"}, {"grupo": "Grupo L", "local": "Inglaterra", "visitante": "Ghana", "fecha": "2026-06-23", "hora": "17:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe", "color": "34A853"}, {"grupo": "Grupo L", "local": "Panamá", "visitante": "Croacia", "fecha": "2026-06-23", "hora": "20:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo K", "local": "Colombia", "visitante": "Rep. Democ. del Congo", "fecha": "2026-06-23", "hora": "23:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo B", "local": "Suiza", "visitante": "Canadá", "fecha": "2026-06-24", "hora": "16:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo B", "local": "Bosnia y Herzegovina", "visitante": "Qatar", "fecha": "2026-06-24", "hora": "16:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo C", "local": "Brasil", "visitante": "Escocia", "fecha": "2026-06-24", "hora": "19:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe", "color": "34A853"}, {"grupo": "Grupo C", "local": "Marruecos", "visitante": "Haití", "fecha": "2026-06-24", "hora": "19:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo A", "local": "Chequia", "visitante": "México", "fecha": "2026-06-24", "hora": "22:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo A", "local": "Sudáfrica", "visitante": "Rep. de Corea", "fecha": "2026-06-24", "hora": "22:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo E", "local": "Curazao", "visitante": "Costa de Marfil", "fecha": "2026-06-25", "hora": "17:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo E", "local": "Ecuador", "visitante": "Alemania", "fecha": "2026-06-25", "hora": "17:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports", "color": "B4A7D6"}, {"grupo": "Grupo F", "local": "Japón", "visitante": "Suecia", "fecha": "2026-06-25", "hora": "20:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo F", "local": "Túnez", "visitante": "Países Bajos", "fecha": "2026-06-25", "hora": "20:00", "transmision": "DSports (Flow/Paramount+)/TV Pública", "color": "E06666"}, {"grupo": "Grupo D", "local": "Turquía", "visitante": "Estados Unidos", "fecha": "2026-06-25", "hora": "23:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo D", "local": "Paraguay", "visitante": "Australia", "fecha": "2026-06-25", "hora": "23:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe", "color": "34A853"}, {"grupo": "Grupo I", "local": "Noruega", "visitante": "Francia", "fecha": "2026-06-26", "hora": "16:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports", "color": "B4A7D6"}, {"grupo": "Grupo I", "local": "Senegal", "visitante": "Irak", "fecha": "2026-06-26", "hora": "16:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo H", "local": "Cabo Verde", "visitante": "Arabia Saudita", "fecha": "2026-06-26", "hora": "21:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo H", "local": "Uruguay", "visitante": "España", "fecha": "2026-06-26", "hora": "21:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports", "color": "B4A7D6"}, {"grupo": "Grupo G", "local": "Egipto", "visitante": "Irán", "fecha": "2026-06-27", "hora": "00:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo G", "local": "Nueva Zelanda", "visitante": "Bélgica", "fecha": "2026-06-27", "hora": "00:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo L", "local": "Panamá", "visitante": "Inglaterra", "fecha": "2026-06-27", "hora": "18:00", "transmision": "DSports (Flow/Paramount+)/TyC Sports/TV Pública", "color": "3C78D8"}, {"grupo": "Grupo L", "local": "Croacia", "visitante": "Ghana", "fecha": "2026-06-27", "hora": "18:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo K", "local": "Colombia", "visitante": "Portugal", "fecha": "2026-06-27", "hora": "20:30", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo K", "local": "Rep. Democ. del Congo", "visitante": "Uzbekistán", "fecha": "2026-06-27", "hora": "20:30", "transmision": "DSports (Flow/Paramount+)/TyC Sports", "color": "46BDC6"}, {"grupo": "Grupo J", "local": "Argelia", "visitante": "Austria", "fecha": "2026-06-27", "hora": "23:00", "transmision": "DSports (Flow/Paramount+)", "color": "FF9900"}, {"grupo": "Grupo J", "local": "Jordania", "visitante": "Argentina", "fecha": "2026-06-27", "hora": "23:00", "transmision": "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports/TV Pública", "color": "FFD966"}];
+const TVNAMES = {"DSports (Flow/Paramount+)": "DSports", "DSports (Flow/Paramount+)/TyC Sports": "DSports + TyC Sports", "DSports (Flow/Paramount+)/Disney+/Telefe": "DSports + Disney+ + Telefe", "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports": "DSports + Disney+ + Telefe + TyC", "DSports (Flow/Paramount+)/TV Pública": "DSports + TV Pública", "DSports (Flow/Paramount+)/TyC Sports/TV Pública": "DSports + TyC + TV Pública", "DSports (Flow/Paramount+)/Disney+/Telefe/TyC Sports/TV Pública": "DSports + Disney+ + Telefe + TyC + TV Pública"};
+/* Mapeo equipo ES -> alias EN para cruzar con las APIs */
+const TEAM_EN = {"México":["Mexico"],"Sudáfrica":["South Africa"],"Rep. de Corea":["South Korea","Korea Republic"],"Chequia":["Czech Republic","Czechia"],"Canadá":["Canada"],"Bosnia y Herzegovina":["Bosnia and Herzegovina","Bosnia-Herzegovina"],"Qatar":["Qatar"],"Suiza":["Switzerland"],"Brasil":["Brazil"],"Marruecos":["Morocco"],"Haití":["Haiti"],"Escocia":["Scotland"],"Estados Unidos":["United States","USA","United States of America"],"Paraguay":["Paraguay"],"Australia":["Australia"],"Turquía":["Turkey","Türkiye","Turkiye"],"Alemania":["Germany"],"Curazao":["Curaçao","Curacao"],"Costa de Marfil":["Ivory Coast","Côte d'Ivoire","Cote d'Ivoire"],"Ecuador":["Ecuador"],"Países Bajos":["Netherlands","Holland"],"Japón":["Japan"],"Suecia":["Sweden"],"Túnez":["Tunisia"],"Bélgica":["Belgium"],"Egipto":["Egypt"],"Irán":["Iran","IR Iran"],"Nueva Zelanda":["New Zealand"],"España":["Spain"],"Cabo Verde":["Cape Verde","Cabo Verde","Cape Verde Islands"],"Arabia Saudita":["Saudi Arabia"],"Uruguay":["Uruguay"],"Francia":["France"],"Senegal":["Senegal"],"Irak":["Iraq"],"Noruega":["Norway"],"Argentina":["Argentina"],"Argelia":["Algeria"],"Austria":["Austria"],"Jordania":["Jordan"],"Portugal":["Portugal"],"Rep. Democ. del Congo":["DR Congo","Congo DR","Democratic Republic of the Congo","Congo-Kinshasa"],"Uzbekistán":["Uzbekistan"],"Colombia":["Colombia"],"Inglaterra":["England"],"Croacia":["Croatia"],"Ghana":["Ghana"],"Panamá":["Panama"]};
+
+const DIAS=["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+const MESES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm=s=>String(s).toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"").replace(/[^a-z0-9]/g,"");
+
+/* índice EN normalizado -> nombre ES */
+const EN2ES={};
+for(const [es,aliases] of Object.entries(TEAM_EN)){ EN2ES[norm(es)]=es; for(const a of aliases) EN2ES[norm(a)]=es; }
+const tsAR=m=>Date.parse(m.fecha+"T"+m.hora+":00-03:00");
+MATCHES.forEach((m,i)=>{ m.ts=tsAR(m); m.id=i; m.letter=m.grupo.slice(-1);
+  m.key=m.letter+"|"+[norm(m.local),norm(m.visitante)].sort().join("|"); });
+MATCHES.sort((a,b)=>a.ts-b.ts);
+const byKey={}; MATCHES.forEach(m=>byKey[m.key]=m);
+
+/* ====== ALMACENAMIENTO LOCAL (Capacitor Preferences o localStorage) ====== */
+const Prefs = (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Preferences) || null;
+const store = {
+  async get(k){ if(Prefs){ const r=await Prefs.get({key:k}); return r.value; } return localStorage.getItem(k); },
+  async set(k,v){ if(Prefs){ await Prefs.set({key:k,value:v}); } else localStorage.setItem(k,v); }
+};
+
+/* ====== ESTADO ====== */
+let favs=new Set(), settings={fdKey:"",afKey:""}, mvpCache={};
+let fGroup=null,fColor=null,fText="",onlyFavs=false, curGroup="A", curView="fixture";
+let lastSync=null, syncErr=false;
+
+/* ====== FETCH (CapacitorHttp en nativo evita CORS; fetch normal en web) ====== */
+async function http(url, headers){
+  const res = await fetch(url, {headers: headers||{}, cache:"no-store"});
+  if(!res.ok) throw new Error("HTTP "+res.status);
+  return res.json();
+}
+
+/* ====== PROVEEDORES DE RESULTADOS ====== */
+function orient(m, name1, g1, g2){ // devuelve [golesLocal, golesVisitante] según nuestro orden
+  const es = EN2ES[norm(name1)];
+  return es===m.local ? [g1,g2] : [g2,g1];
+}
+/* Resultados de semilla: últimos resultados conocidos al generar este archivo.
+   Garantizan que se vean resultados aunque no haya red (p. ej. HTML abierto como
+   archivo local en Safari o en un visor que bloquea fetch). Si hay red, los datos
+   frescos los pisan. */
+const SEED_DATE = "12/06/2026";
+const SEED_RESULTS = [{"group": "Group A", "team1": "Mexico", "team2": "South Africa", "score": {"ft": [2, 0]}, "goals1": [{"name": "Julián Quiñones", "minute": "9"}, {"name": "Raúl Jiménez", "minute": "67"}], "goals2": []}, {"group": "Group A", "team1": "South Korea", "team2": "Czech Republic", "score": {"ft": [2, 1]}, "goals1": [{"name": "Hwang In-Beom", "minute": "67"}, {"name": "Oh Hyeon-Gyu", "minute": "80"}], "goals2": [{"name": "Ladislav Krejcí", "minute": "59"}]}];
+
+function parseOpenfootball(list){
+  let applied = 0;
+  for(const rm of (list||[])){
+    if(!rm.group || !rm.score || !rm.score.ft) continue;
+    const t1 = typeof rm.team1==="string"?rm.team1:(rm.team1&&rm.team1.name);
+    const t2 = typeof rm.team2==="string"?rm.team2:(rm.team2&&rm.team2.name);
+    const e1=EN2ES[norm(t1)], e2=EN2ES[norm(t2)];
+    if(!e1||!e2) continue;
+    const key = rm.group.slice(-1)+"|"+[norm(e1),norm(e2)].sort().join("|");
+    const m = byKey[key]; if(!m) continue;
+    const [gl,gv] = orient(m, t1, rm.score.ft[0], rm.score.ft[1]);
+    m.res = Object.assign(m.res||{}, {st:"ft", gl, gv});
+    if(!m.res.ftAt) m.res.ftAt = Math.min(Date.now(), m.ts + 2*3600e3);
+    const fmtGoals = g=>(g||[]).map(x=>esc(x.name)+" "+esc(x.minute)+"'").join(", ");
+    const got1=fmtGoals(rm.goals1), got2=fmtGoals(rm.goals2);
+    const same = EN2ES[norm(t1)]===m.local;
+    m.res.goalsL = same?got1:got2; m.res.goalsV = same?got2:got1;
+    applied++;
+  }
+  return applied;
+}
+async function loadOpenfootball(){
+  const d = await http("https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json");
+  return parseOpenfootball(d.matches);
+}
+async function loadFootballData(){
+  if(!settings.fdKey) return;
+  const d = await http("https://api.football-data.org/v4/competitions/WC/matches",
+                       {"X-Auth-Token": settings.fdKey});
+  for(const rm of (d.matches||[])){
+    if(!rm.group) continue;
+    const e1=EN2ES[norm(rm.homeTeam&&rm.homeTeam.name)], e2=EN2ES[norm(rm.awayTeam&&rm.awayTeam.name)];
+    if(!e1||!e2) continue;
+    const key = rm.group.slice(-1)+"|"+[norm(e1),norm(e2)].sort().join("|");
+    const m = byKey[key]; if(!m) continue;
+    const sc = rm.score && rm.score.fullTime || {};
+    const live = rm.status==="IN_PLAY"||rm.status==="PAUSED";
+    const fin  = rm.status==="FINISHED";
+    if(!live && !fin) continue;
+    const [gl,gv] = orient(m, rm.homeTeam.name, sc.home??0, sc.away??0);
+    m.res = Object.assign(m.res||{}, {st: fin?"ft":"live", gl, gv});
+    if(fin && !m.res.ftAt) m.res.ftAt = Date.now();
+  }
+}
+/* MVP: mejor valorado del partido vía API-Football (10 min después del final) */
+const afFixturesByDate={};
+async function loadMVPs(){
+  if(!settings.afKey) return;
+  const now=Date.now();
+  const pending = MATCHES.filter(m=>m.res && m.res.st==="ft" && !m.res.mvp && !m.res.mvpTried
+                                 && m.res.ftAt && now - m.res.ftAt > 10*60e3);
+  for(const m of pending.slice(0,3)){ // cuidamos la cuota gratuita
+    try{
+      const dUTC = new Date(m.ts).toISOString().slice(0,10);
+      if(!afFixturesByDate[dUTC]){
+        afFixturesByDate[dUTC] = await http(
+          "https://v3.football.api-sports.io/fixtures?league=1&season=2026&date="+dUTC,
+          {"x-apisports-key": settings.afKey});
+      }
+      const fx = (afFixturesByDate[dUTC].response||[]).find(f=>{
+        const e1=EN2ES[norm(f.teams.home.name)], e2=EN2ES[norm(f.teams.away.name)];
+        return e1&&e2 && m.key === m.letter+"|"+[norm(e1),norm(e2)].sort().join("|");
+      });
+      if(!fx){ m.res.mvpTried=true; continue; }
+      const pl = await http("https://v3.football.api-sports.io/fixtures/players?fixture="+fx.fixture.id,
+                            {"x-apisports-key": settings.afKey});
+      let best=null;
+      for(const team of (pl.response||[]))
+        for(const p of (team.players||[])){
+          const r=parseFloat(p.statistics&&p.statistics[0]&&p.statistics[0].games&&p.statistics[0].games.rating);
+          if(r && (!best||r>best.r)) best={name:p.player.name, r};
+        }
+      m.res.mvpTried=true;
+      if(best){ m.res.mvp={name:best.name, rating:best.r}; mvpCache[m.key]=m.res.mvp;
+        await store.set("mvp", JSON.stringify(mvpCache)); }
+    }catch(e){ /* reintenta en el próximo ciclo */ }
+  }
+}
+
+/* ====== CICLO DE ACTUALIZACIÓN ====== */
+let netBlocked = false;
+async function refresh(){
+  const results = await Promise.allSettled([loadOpenfootball(), loadFootballData()]);
+  const ofOk = results[0].status === "fulfilled";
+  const fdOk = settings.fdKey ? results[1].status === "fulfilled" : null;
+  syncErr = !ofOk && fdOk !== true;     // ninguna fuente respondió
+  netBlocked = syncErr;
+  if(!syncErr){ lastSync = new Date(); try{ await loadMVPs(); }catch(e){} }
+  renderSync(); render(); renderGroups(); tickNext();
+}
+function anyLiveWindow(){
+  const now=Date.now();
+  return MATCHES.some(m=> now > m.ts - 10*60e3 && now < m.ts + 150*60e3 );
+}
+let pollTimer=null;
+function schedule(){
+  clearTimeout(pollTimer);
+  const ms = anyLiveWindow() ? 60e3 : 10*60e3; // 1 min en ventana de partidos, 10 min fuera
+  pollTimer=setTimeout(async()=>{ await refresh(); schedule(); }, ms);
+}
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ refresh(); schedule(); } });
+
+function renderSync(){
+  const el=$("#sync"); el.classList.toggle("err",syncErr);
+  $("#syncTxt").textContent = syncErr
+    ? "Sin acceso a internet desde este archivo — mostrando resultados al " + SEED_DATE + ". En la app instalada se actualiza solo."
+    : lastSync ? "Resultados actualizados " + lastSync.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})
+               + (settings.fdKey ? " · en vivo activado" : " · modo básico (sin clave)") : "Sincronizando…";
+  $("#updInfo").textContent = (lastSync? "Última actualización: "+lastSync.toLocaleTimeString("es-AR") : 
+      syncErr ? "Este archivo no puede conectarse a internet (Safari y algunos visores bloquean la red en archivos locales). Los resultados embebidos son al "+SEED_DATE+". En la app nativa compilada, o abriendo el archivo en Chrome, la actualización automática funciona." : "Todavía no se actualizó.")
+    + (!syncErr && lastSync ? (anyLiveWindow() ? " Se actualiza cada 1 minuto (hay partidos en juego)." : " Se actualiza cada 10 minutos.") : "");
+}
+
+/* ====== TARJETA DE PARTIDO ====== */
+function cardHTML(m, idx){
+  const now=Date.now();
+  const r=m.res;
+  const past = r ? r.st==="ft" : (m.ts + 2*3600e3 < now);
+  const esArg = m.local==="Argentina"||m.visitante==="Argentina";
+  const isFav = favs.has(m.key);
+  let horaBox;
+  if(r && r.st==="live") horaBox = `<span class="score">${r.gl}–${r.gv}</span><span class="st live">EN VIVO</span>`;
+  else if(r && r.st==="ft") horaBox = `<span class="score">${r.gl}–${r.gv}</span><span class="st ft">FINAL</span>`;
+  else horaBox = `${m.hora}<small>HS AR</small>`;
+  let extra="";
+  if(r && (r.goalsL||r.goalsV)){
+    const g=[]; if(r.goalsL) g.push(`⚽ ${r.goalsL}`); if(r.goalsV) g.push(`⚽ ${r.goalsV}`);
+    extra += g.join(" · ");
+  }
+  if(r && r.mvp) extra += (extra?"<br>":"") + `<span class="mvp">⭐ MVP: ${esc(r.mvp.name)} (${r.mvp.rating})</span>`;
+  else if(r && r.st==="ft" && r.ftAt && now-r.ftAt>10*60e3 && !settings.afKey)
+    extra += (extra?"<br>":"") + `<span style="opacity:.7">MVP disponible con clave API-Football (Ajustes)</span>`;
+  return `<div class="match ${past?"past":""} ${esArg?"arg":""} ${isFav?"isfav":""}">
+    <div class="bar" style="background:#${m.color}"></div>
+    <div class="hora">${horaBox}</div>
+    <div class="info">
+      <div class="teams">${esc(m.local)} <span class="vs">vs.</span> ${esc(m.visitante)}</div>
+      <div class="meta">
+        <span class="gpill">${esc(m.grupo)}</span>
+        <span class="tv"><span class="dot" style="background:#${m.color}"></span>${esc(TVNAMES[m.transmision])}</span>
+        ${r&&r.st!=="ft" ? "" : ""}
+      </div>
+    </div>
+    ${extra?`<div class="extra">${extra}</div>`:""}
+    <div class="acts">
+      <button class="star ${isFav?"on":""}" data-fav="${m.key}" aria-label="Favorito">${isFav?"★":"☆"}</button>
+      <button class="add" data-i="${m.id}" aria-label="Agregar al calendario">+</button>
+    </div>
+  </div>`;
+}
+
+/* ====== FIXTURE ====== */
+const groups=[...new Set(MATCHES.map(m=>m.grupo))].sort();
+$("#groupChips").innerHTML = `<button class="chip on" data-g="">Todos</button><button class="chip fav" data-g="__fav">★ Favoritos</button>`+
+  groups.map(g=>`<button class="chip" data-g="${g}">${g.replace("Grupo ","Gr. ")}</button>`).join("");
+$("#groupChips").addEventListener("click",e=>{
+  const b=e.target.closest(".chip"); if(!b) return;
+  if(b.dataset.g==="__fav"){ onlyFavs=!onlyFavs; b.classList.toggle("on",onlyFavs); }
+  else { fGroup=b.dataset.g||null; onlyFavs=false;
+    $("#groupChips").querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c===b)); }
+  render();
+});
+const colors=[...new Map(MATCHES.map(m=>[m.color,TVNAMES[m.transmision]])).entries()];
+$("#tvChips").innerHTML = colors.map(([c,name])=>
+  `<button class="chip tchip" data-c="${c}"><span class="dot" style="background:#${c}"></span>${esc(name)}</button>`).join("");
+$("#tvChips").addEventListener("click",e=>{
+  const b=e.target.closest(".chip"); if(!b) return;
+  fColor = (fColor===b.dataset.c)?null:b.dataset.c;
+  $("#tvChips").querySelectorAll(".chip").forEach(x=>{
+    const on=x.dataset.c===fColor; x.classList.toggle("on",on);
+    x.style.background=on?"#"+x.dataset.c:""; x.style.borderColor=on?"#"+x.dataset.c:"";
+  });
+  render();
+});
+$("#q").addEventListener("input",e=>{ fText=e.target.value.trim(); render(); });
+
+function render(){
+  const list=$("#list"); let html="", shown=0, lastDay="";
+  const todayKey=new Date(Date.now()-3*3600e3).toISOString().slice(0,10);
+  for(const m of MATCHES){
+    if(fGroup && m.grupo!==fGroup) continue;
+    if(fColor && m.color!==fColor) continue;
+    if(onlyFavs && !favs.has(m.key)) continue;
+    if(fText && !norm(m.local+m.visitante+m.grupo).includes(norm(fText))) continue;
+    shown++;
+    if(m.fecha!==lastDay){
+      lastDay=m.fecha;
+      const d=new Date(m.fecha+"T00:00:00Z");
+      html+=`<div class="day ${m.fecha===todayKey?"today":""}"><h2>${DIAS[d.getUTCDay()]} ${d.getUTCDate()} de ${MESES[d.getUTCMonth()]}<em>${m.fecha===todayKey?"· HOY":""}</em></h2></div>`;
+    }
+    html+=cardHTML(m);
+  }
+  list.innerHTML=html;
+  $("#empty").hidden=shown>0;
+}
+
+/* ====== GRUPOS Y POSICIONES ====== */
+const LETTERS="ABCDEFGHIJKL".split("");
+$("#grpSel").innerHTML=LETTERS.map(l=>`<button class="chip ${l==="A"?"on":""}" data-l="${l}">Grupo ${l}</button>`).join("");
+$("#grpSel").addEventListener("click",e=>{
+  const b=e.target.closest(".chip"); if(!b) return;
+  curGroup=b.dataset.l;
+  $("#grpSel").querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c===b));
+  renderGroups();
+});
+function standingsFor(letter){
+  const ms=MATCHES.filter(m=>m.letter===letter);
+  const T={};
+  for(const m of ms){ T[m.local]=T[m.local]||{eq:m.local,pj:0,g:0,e:0,p:0,gf:0,gc:0};
+                      T[m.visitante]=T[m.visitante]||{eq:m.visitante,pj:0,g:0,e:0,p:0,gf:0,gc:0}; }
+  for(const m of ms){
+    if(!m.res || m.res.st!=="ft") continue;
+    const A=T[m.local],B=T[m.visitante];
+    A.pj++;B.pj++; A.gf+=m.res.gl;A.gc+=m.res.gv; B.gf+=m.res.gv;B.gc+=m.res.gl;
+    if(m.res.gl>m.res.gv){A.g++;B.p++;} else if(m.res.gl<m.res.gv){B.g++;A.p++;} else {A.e++;B.e++;}
+  }
+  const rows=Object.values(T).map(t=>({...t,dif:t.gf-t.gc,pts:t.g*3+t.e}));
+  rows.sort((a,b)=>b.pts-a.pts||b.dif-a.dif||b.gf-a.gf||a.eq.localeCompare(b.eq,"es"));
+  return rows;
+}
+function renderGroups(){
+  const rows=standingsFor(curGroup);
+  $("#standings").innerHTML=`<table>
+    <thead><tr><th>#</th><th>Equipo</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DIF</th><th>PTS</th></tr></thead>
+    <tbody>${rows.map((t,i)=>`<tr class="${i<2?"q":""}">
+      <td class="pos">${i+1}</td><td class="team">${esc(t.eq)}</td>
+      <td>${t.pj}</td><td>${t.g}</td><td>${t.e}</td><td>${t.p}</td>
+      <td>${t.gf}</td><td>${t.gc}</td><td>${t.dif>0?"+":""}${t.dif}</td><td class="pts">${t.pts}</td>
+    </tr>`).join("")}</tbody></table>`;
+  $("#grpMatches").innerHTML=MATCHES.filter(m=>m.letter===curGroup)
+    .map(m=>{
+      const d=new Date(m.fecha+"T00:00:00Z");
+      return `<div class="legend-note" style="padding:4px 0 2px">${DIAS[d.getUTCDay()]} ${d.getUTCDate()}/${d.getUTCMonth()+1}</div>`+cardHTML(m);
+    }).join("");
+}
+
+/* ====== PRÓXIMOS (Argentina + favoritos) ====== */
+function nextOf(filter){
+  const now=Date.now();
+  return MATCHES.find(m=>filter(m) && (!m.res || m.res.st!=="ft") && m.ts > now - 150*60e3);
+}
+function cdStr(diff){
+  if(diff<=0) return "EN JUEGO";
+  const d=Math.floor(diff/864e5),h=Math.floor(diff%864e5/36e5),mi=Math.floor(diff%36e5/6e4),s=Math.floor(diff%6e4/1e3);
+  const p=n=>String(n).padStart(2,"0");
+  return d>0?`${d}d ${h}h ${mi}m`:`${p(h)}:${p(mi)}:${p(s)}`;
+}
+function tickNext(){
+  const now=Date.now(); let html="";
+  const arg=nextOf(m=>m.local==="Argentina"||m.visitante==="Argentina");
+  if(arg) html+=`<div class="next"><div><div class="lbl">Próximo partido de Argentina</div>
+    <div class="who">${esc(arg.local)} vs. ${esc(arg.visitante)} · ${arg.hora} hs</div></div>
+    <div class="cd">${cdStr(arg.ts-now)}</div></div>`;
+  const fav=nextOf(m=>favs.has(m.key) && m!==arg);
+  if(fav) html+=`<div class="next fav"><div><div class="lbl">★ Tu próximo favorito</div>
+    <div class="who">${esc(fav.local)} vs. ${esc(fav.visitante)} · ${fav.hora} hs</div></div>
+    <div class="cd">${cdStr(fav.ts-now)}</div></div>`;
+  $("#nextCards").innerHTML=html;
+}
+setInterval(tickNext,1000);
+
+/* ====== FAVORITOS + CALENDARIO (delegación global) ====== */
+document.addEventListener("click", async e=>{
+  const st=e.target.closest("[data-fav]");
+  if(st){
+    const k=st.dataset.fav;
+    favs.has(k)?favs.delete(k):favs.add(k);
+    await store.set("favs", JSON.stringify([...favs]));
+    render(); renderGroups(); tickNext(); return;
+  }
+  const b=e.target.closest(".add"); if(!b) return;
+  const m=MATCHES.find(x=>x.id===+b.dataset.i);
+  const pad=n=>String(n).padStart(2,"0");
+  const utcFmt=t=>{const d=new Date(t);
+    return `${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}00`;};
+  const arFmt=t=>utcFmt(t-3*3600e3);
+  const title=`⚽ ${m.local} vs. ${m.visitante} (${m.grupo})`;
+  const desc=`Copa Mundial FIFA 2026 — ${m.grupo}\\nTransmiten: ${m.transmision}\\nHora argentina (UTC-3)`;
+  const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Mundial2026//App//ES","BEGIN:VTIMEZONE",
+    "TZID:America/Argentina/Buenos_Aires","BEGIN:STANDARD","DTSTART:19700101T000000",
+    "TZOFFSETFROM:-0300","TZOFFSETTO:-0300","TZNAME:-03","END:STANDARD","END:VTIMEZONE",
+    "BEGIN:VEVENT",`UID:${m.ts}-${norm(m.local)}@mundial2026`,
+    "DTSTAMP:20260611T000000Z",
+    `DTSTART;TZID=America/Argentina/Buenos_Aires:${arFmt(m.ts)}`,
+    `DTEND;TZID=America/Argentina/Buenos_Aires:${arFmt(m.ts+2*3600e3)}`,
+    `SUMMARY:${title}`,`DESCRIPTION:${desc}`,
+    "BEGIN:VALARM","ACTION:DISPLAY",`DESCRIPTION:${title} en 30 minutos`,"TRIGGER:-PT30M","END:VALARM",
+    "END:VEVENT","END:VCALENDAR"].join("\r\n");
+  $("#dlgTitle").textContent=title;
+  $("#dlgSub").textContent=`${m.fecha.split("-").reverse().join("/")} · ${m.hora} hs AR · ${TVNAMES[m.transmision]}`;
+  const a=$("#dlgIcs");
+  a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));
+  a.download=`${m.local}_vs_${m.visitante}`.replace(/[^\wÀ-ÿ]+/g,"_")+".ics";
+  $("#dlgGcal").href="https://calendar.google.com/calendar/render?action=TEMPLATE"
+    +"&text="+encodeURIComponent(title)
+    +"&dates="+utcFmt(m.ts)+"Z/"+utcFmt(m.ts+2*3600e3)+"Z"
+    +"&details="+encodeURIComponent(desc.replace(/\\n/g,"\n"))
+    +"&ctz=America/Argentina/Buenos_Aires";
+  $("#dlg").showModal();
+});
+$("#dlgClose").addEventListener("click",()=>$("#dlg").close());
+
+/* ====== TABS ====== */
+document.querySelector("nav").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  curView=b.dataset.v;
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="view-"+curView));
+});
+
+/* ====== AJUSTES ====== */
+$("#btnSave").addEventListener("click",async()=>{
+  settings.fdKey=$("#fdKey").value.trim(); settings.afKey=$("#afKey").value.trim();
+  await store.set("settings", JSON.stringify(settings));
+  $("#testOut").textContent="Guardado en este dispositivo.";
+  refresh();
+});
+$("#btnTest").addEventListener("click",async()=>{
+  $("#testOut").textContent="Probando…";
+  const out=[];
+  try{ await http("https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json"); out.push("openfootball ✓"); }
+  catch(e){ out.push("openfootball ✗"); }
+  const k=$("#fdKey").value.trim();
+  if(k){ try{ await http("https://api.football-data.org/v4/competitions/WC",{"X-Auth-Token":k}); out.push("football-data ✓"); }
+         catch(e){ out.push("football-data ✗ (clave o CORS — en la app nativa funciona)"); } }
+  const k2=$("#afKey").value.trim();
+  if(k2){ try{ const r=await http("https://v3.football.api-sports.io/status",{"x-apisports-key":k2}); out.push("API-Football ✓"); }
+          catch(e){ out.push("API-Football ✗"); } }
+  $("#testOut").textContent=out.join(" · ");
+});
+$("#btnRefresh").addEventListener("click",refresh);
+
+/* ====== ARRANQUE ====== */
+(async function init(){
+  parseOpenfootball(SEED_RESULTS);   // resultados embebidos: visibles aun sin red
+  try{
+    const f=await store.get("favs"); if(f) favs=new Set(JSON.parse(f));
+    const s=await store.get("settings"); if(s) settings=Object.assign(settings,JSON.parse(s));
+    const mv=await store.get("mvp"); if(mv){ mvpCache=JSON.parse(mv);
+      for(const [k,v] of Object.entries(mvpCache)){ const m=byKey[k]; if(m){ m.res=m.res||{}; m.res.mvp=v; } } }
+    $("#fdKey").value=settings.fdKey||""; $("#afKey").value=settings.afKey||"";
+  }catch(e){}
+  render(); renderGroups(); tickNext(); renderSync();
+  refresh(); schedule();
+})();
+</script>
+</body>
+</html>

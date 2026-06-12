@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copiar a android/app/src/main/res/xml/backup_rules.xml y referenciar:
+     <application android:allowBackup="true" android:fullBackupContent="@xml/backup_rules" ...>
+     Excluye las claves de API de los backups en la nube. -->
+<full-backup-content>
+    <exclude domain="sharedpref" path="CapacitorStorage.settings" />
+</full-backup-content>

@@ -1,0 +1,9 @@
+AndroidManifest.xml — verificar/agregar dentro de <application>:
+
+  android:networkSecurityConfig="@xml/network_security_config"
+  android:fullBackupContent="@xml/backup_rules"
+  android:usesCleartextTraffic="false"
+
+Permisos: la app SOLO necesita
+  <uses-permission android:name="android.permission.INTERNET" />
+No agregar ningún otro permiso (ubicación, contactos, almacenamiento, etc.).
