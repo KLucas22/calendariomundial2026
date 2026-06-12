@@ -2,8 +2,7 @@
   "apps": [
     {
       "appId": "a099f718",
-      "type": "capacitor",
-      "iosPackageManager": "spm"
+      "type": "capacitor"
     }
   ]
 }
