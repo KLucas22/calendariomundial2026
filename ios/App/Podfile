@@ -1,0 +1,7 @@
+platform :ios, '13.0'
+use_frameworks!
+
+# Puntos de entrada para los plugins nativos de Capacitor
+target 'App' do
+  # Pods para App
+end
