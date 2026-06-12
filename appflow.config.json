@@ -1,0 +1,8 @@
+{
+  "apps": [
+    {
+      "id": "calendariomundial2026",
+      "type": "capacitor"
+    }
+  ]
+}
