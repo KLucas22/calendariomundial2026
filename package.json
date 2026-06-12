@@ -6,8 +6,7 @@
   "scripts": {
     "sync": "npx cap sync",
     "ios": "npx cap add ios && npx cap sync ios && npx cap open ios",
-    "android": "npx cap add android && npx cap sync android && npx cap open android",
-    "build": "echo 'No web build required'"
+    "android": "npx cap add android && npx cap sync android && npx cap open android"
   },
   "dependencies": {
     "@capacitor/core": "^6.0.0",
