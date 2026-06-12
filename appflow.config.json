@@ -4,8 +4,7 @@
       "appId": "a099f718",
       "type": "capacitor",
       "dependencyInstallCommand": "npm install",
-      "webBuildCommand": "echo 'Skipping web build'",
-      "capacitorSyncCommand": "npx cap add ios && npx cap sync ios"
+      "webBuildCommand": "npx cap add ios && npx cap sync ios"
     }
   ]
 }
